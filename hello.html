@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>计算器</title>
+    <link rel="stylesheet" href="world.css">
+</head>
+<body>
+<h3>本月绩效A人员</h3>
+<input name="check1" type="checkbox" value="ru">ru
+<input name="check1" type="checkbox" value="ay">ay
+<input name="check1" type="checkbox" value="lo">lo
+<input name="check1" type="checkbox" value="to">to
+<input name="check1" type="checkbox" value="ka">ka
+<h3>上报绩效A人员</h3>
+<input name="check2" type="checkbox" value="ru">ru
+<input name="check2" type="checkbox" value="ay">ay
+<input name="check2" type="checkbox" value="lo">lo
+<input name="check2" type="checkbox" value="to">to
+<input name="check2" type="checkbox" value="ka">ka
+<ul class="percent">
+    <li>ru：扣除<input type="number" value="0">%</li>
+    <li>ay：扣除<input type="number" value="0">%</li>
+    <li>lo：扣除<input type="number" value="0">%</li>
+    <li>to：扣除<input type="number" value="0">%</li>
+    <li>ka：扣除<input type="number" value="0">%</li>
+</ul>
+<input class="submit" type="button" value="计算">
+<div class="endarea"></div>
+</body>
+</html>
+<script src="jquery.min.js"></script>
+<script>
+    $(document).on('click','.submit',function(){
+        // 本月绩效人员选择
+        var checkboxdata = $('[name=check1]:checked').map(function() {
+            return $(this).val();
+        }).get().join(',');
+        // 本月上报人员选择
+        var checkboxdata2 = $('[name=check2]:checked').map(function() {
+            return $(this).val();
+        }).get().join(',');
+        if (checkboxdata === 'ru,ay' || checkboxdata === checkboxdata2) {
+            alert('无需计算');
+            return false;
+        } else {
+            // 人员信息
+            var nums= [{
+                name: 'ru',
+                no: 6500,
+                no2: 5525,
+                no3: 975
+            },{
+                name: 'ay',
+                no: 5000,
+                no2: 4250,
+                no3: 750
+            },{
+                name: 'lo',
+                no: 4680,
+                no2: 3978,
+                no3: 702
+            },{
+                name: 'to',
+                no: 3900,
+                no2: 3315,
+                no3: 585
+            },{
+                name: 'ka',
+                no: 3900,
+                no2: 3315,
+                no3: 585
+            }]
+            // 声明总绩效数
+            var Allprice = 0;
+            nums.forEach(function(item){
+                if (checkboxdata2.indexOf(item.name) > -1) {
+                    Allprice += item.no3; // 计算总绩效钱数
+                }
+            });
+            // 声明未得绩效A人员数量
+            var addNum = 0;
+            nums.forEach(function(item, idx){
+                if (checkboxdata.indexOf(item.name) > -1) {
+                    var percent = parseInt($('.percent li').eq(idx).find('input').val()) / 100; // 获取扣除绩效比例
+                    item.no2 = item.no2 + (item.no3 - (item.no3 * percent)); // 计算当月绩效A人员扣除后应得钱数
+                    Allprice = Allprice - (item.no3 - (item.no3 * percent)); // 从总绩效中减去当月绩效A人员绩效
+                } else {
+                    addNum++ // 计算当月未得绩效A人员数量
+                }
+            });
+            if (Allprice < 0) {
+                alert('无多余绩效分配');
+                return false;
+            }
+            $('.endarea').html('');
+            // 计算1%薪总和
+            var endNum = 0;
+            nums.forEach(function(item){
+                if (checkboxdata.indexOf(item.name) < 0) {
+                    endNum += item.no * 0.01;
+                }
+            });
+            // 计算能被整除几次
+            var endLimit = parseInt(Allprice / endNum);
+            // 计算剩余平均分
+            var endPrice = Allprice - (endNum * endLimit);
+            nums.forEach(function(item){
+                // 非拿A人员计算
+                if (checkboxdata.indexOf(item.name) < 0) {
+                    // 最后所得 = 基数 + （薪 * 整除系数） + （剩余平均数）
+                    item.no2 = item.no2 + (item.no * (endLimit / 100)) + (endPrice / addNum);
+                }
+                $('.endarea').append('<p>'+item.name+'应得：'+(item.no2 / 1000)+'</p>');
+            });
+        }
+    });
+</script>

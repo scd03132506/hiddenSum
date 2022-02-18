@@ -1,0 +1,25 @@
+body, html{
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+}
+h3{
+    font-size: 20px;
+    margin: 15px 0;
+    padding-left: 20px;
+}
+input[type=checkbox]{
+    margin:0 4px 0 20px;
+    position: relative;
+    top: 2px;
+}
+.percent li{
+    list-style: none;
+    line-height: 35px;
+}
+input[type=button]{
+    margin-left: 20px;
+}
+.endarea{
+    padding-left: 20px;
+}

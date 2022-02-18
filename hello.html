@@ -82,7 +82,7 @@
             var addNum = 0;
             nums.forEach(function(item, idx){
                 if (checkboxdata.indexOf(item.name) > -1) {
-                    var percent = parseInt($('.percent li').eq(idx).find('input').val()) / 100; // 获取扣除绩效比例
+                    var percent = parseInt($('.percent li').eq(idx).find('input').val()) / 100 || 0; // 获取扣除绩效比例
                     item.no2 = item.no2 + (item.no3 - (item.no3 * percent)); // 计算当月绩效A人员扣除后应得钱数
                     Allprice = Allprice - (item.no3 - (item.no3 * percent)); // 从总绩效中减去当月绩效A人员绩效
                 } else {

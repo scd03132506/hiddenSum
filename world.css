@@ -20,6 +20,10 @@ input[type=checkbox]{
 input[type=button]{
     margin-left: 20px;
 }
-.endarea{
+.endarea, .allend{
     padding-left: 20px;
+}
+.allend span{
+	display: inline-block;
+	margin-right: 15px;
 }

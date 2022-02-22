@@ -27,10 +27,27 @@
 </ul>
 <input class="submit" type="button" value="计算">
 <div class="endarea"></div>
+<div class="second-wrap" style="display: none">
+	<h3>谁</h3>
+	<input name="check3" type="checkbox" value="ru">ru
+	<input name="check3" type="checkbox" value="ay">ay
+	<input name="check3" type="checkbox" value="lo">lo
+	<input name="check3" type="checkbox" value="to">to
+	<input name="check3" type="checkbox" value="ka">ka
+	<h3>分给</h3>
+	<input name="check4" type="checkbox" value="ru">ru
+	<input name="check4" type="checkbox" value="ay">ay
+	<input name="check4" type="checkbox" value="lo">lo
+	<input name="check4" type="checkbox" value="to">to
+	<input name="check4" type="checkbox" value="ka">ka
+	<div style="padding: 15px 0"><input class="submit2" type="button" value="二次计算"></div>
+	<div class="allend"></div>
+</div>
 </body>
 </html>
 <script src="jquery.min.js"></script>
 <script>
+	var nums = [];
     $(document).on('click','.submit',function(){
         // 本月绩效人员选择
         var checkboxdata = $('[name=check1]:checked').map(function() {
@@ -45,7 +62,7 @@
             return false;
         } else {
             // 人员信息
-            var nums= [{
+            nums = [{
                 name: 'ru',
                 no: 6500,
                 no2: 5525,
@@ -113,6 +130,41 @@
                 }
                 $('.endarea').append('<p>'+item.name+'应得：'+(item.no2 / 1000)+'</p>');
             });
+			$('.second-wrap').show();
         }
     });
+	$(document).on('click','.submit2',function(){
+		// 谁
+        var checkboxdata = $('[name=check3]:checked').map(function() {
+            return $(this).val();
+        }).get().join(',');
+        // 分给
+        var checkboxdata2 = $('[name=check4]:checked').map(function() {
+            return $(this).val();
+        }).get().join(',');
+		// 被分数计算
+		var allAver = 0;
+		$('.allend').html('');
+		nums.forEach(function(item, idx){
+			if (checkboxdata.indexOf(item.name) > -1) {
+				allAver += item.no - item.no2;
+				$('.allend').append('<span>'+item.name+' 应分:'+(item.no - item.no2)+'</span>');
+			}
+		});
+		$('.allend').append('<span>总计：'+allAver+'</span>');
+		// 被分人员总金
+		var allAver2 = 0;
+		nums.forEach(function(item, idx){
+			if (checkboxdata2.indexOf(item.name) > -1) {
+				allAver2 += item.no2;
+			}
+		});
+		// 根据比例分
+		nums.forEach(function(item, idx){
+			if (checkboxdata2.indexOf(item.name) > -1) {
+				var percent = item.no2 / allAver2;
+				$('.allend').append('<span>'+item.name+' 被分:'+(allAver * percent)+'</span>');
+			}
+		});
+	});
 </script>
